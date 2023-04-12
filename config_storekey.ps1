@@ -9,8 +9,7 @@ if ($KEY -eq $null) {Write-Output "Store Key not set"}
 else {
     try {
         Write-Output "Executing frx.exe"
-        Start-Process -FilePath "C:\Program Files\FSLogix\Apps\frx.exe" -Wait -ArgumentList "add-secure-key","-key=connectionString","-value=","$Key"
-        Write-Output "Key Set: $Key"
+        Start-Process -FilePath "C:\Program Files\FSLogix\Apps\frx.exe" -Wait -ArgumentList "add-secure-key -key=connectionString -value=$Key"
     } catch { Write-Output "Executing frx.exe failed" }
 }
 
@@ -20,4 +19,6 @@ New-ItemProperty -Path "HKLM:\Software\FSLogix\Profiles" -Name "CCDLocations" -P
 New-ItemProperty -Path HKLM:\Software\FSLogix\Profiles -Name 'VolumeType' -PropertyType:String -Value vhdx -Force
 New-ItemProperty -Path HKLM:\Software\FSLogix\Profiles -Name 'DeleteLocalProfileWhenVHDShouldApply' -PropertyType:dword -Value 1 -Force
 New-ItemProperty -Path HKLM:\Software\FSLogix\Profiles -Name 'FlipFlopProfileDirectoryName' -PropertyType:dword -Value 1 -Force
-Write-Output "FSLogix Config Finished"
+Write-Output "FSLogix Config Finished, Rebooting"
+
+Restart-Computer  -Force
