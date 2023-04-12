@@ -2,25 +2,12 @@ param (
     [Parameter(Mandatory=$true)]
     [string]$KEY
 )
-if ($KEY -eq $null) {Write-Output "Store Key not set"; break}
-try {& .\psexec.exe -s -accepteula 'C:\Program Files\FSLogix\Apps\frx.exe' add-secure-key -key=connectionString -value=$KEY}
-catch {Write-Output "Executing frx.exe via psexec failed"}
-
-# Remove if Custom Image - from here
-Invoke-WebRequest -Uri "https://aka.ms/fslogix_download" -OutFile "C:\Temp\fslogix.zip"
-Expand-Archive "C:\Temp\fslogix.zip" -DestinationPath C:\Temp\FSLogix
-& C:\Temp\FSLogix\x64\Release\FSLogixAppsSetup.exe /install /quiet /norestart /log c:\temp\fslogix.txt
-
-Start-Sleep -s 20
-
-while($true) { 
-    $Log = Get-Content c:\temp\fslogix.txt -Tail 2
-    If ($log | Select-String -Pattern 'Exit code') { 
-        break
-    } Else 
-    { 
-        Write-Output 'FSLogix installation running'; Start-Sleep -s 10 
-    } 
+if ($KEY -eq $null) {Write-Output "Store Key not set"}
+else {
+    try {
+        Write-Host "Executing frx.exe via psexec"
+        & .\psexec.exe -s -accepteula 'C:\Program Files\FSLogix\Apps\frx.exe' add-secure-key -key=connectionString -value=$KEY
+    } catch { Write-Output "Executing frx.exe via psexec failed" }
 }
 
 Write-Output 'Configure FSLogix ...'
