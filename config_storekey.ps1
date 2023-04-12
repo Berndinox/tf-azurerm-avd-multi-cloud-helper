@@ -21,4 +21,4 @@ New-ItemProperty -Path HKLM:\Software\FSLogix\Profiles -Name 'DeleteLocalProfile
 New-ItemProperty -Path HKLM:\Software\FSLogix\Profiles -Name 'FlipFlopProfileDirectoryName' -PropertyType:dword -Value 1 -Force
 Write-Output "FSLogix Config Finished, Rebooting"
 
-Restart-Computer  -Force
+Restart-Computer -Force
